@@ -20,7 +20,7 @@ class DetailScreen extends StatelessWidget {
             _Overview(),
             _Overview(),
             _Overview(),
-            CastingCards(),
+            const CastingCards(),
           ]))
         ],
       ),
@@ -112,7 +112,7 @@ class _Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
       child: Text(
         "Dolor pariatur Lorem sit nulla veniam deserunt dolor proident laborum magna. Anim nulla occaecat enim cupidatat est nostrud veniam commodo commodo. Deserunt fugiat dolor voluptate aliqua ut deserunt adipisicing est culpa ipsum aute consectetur aliquip. Sit exercitation aliquip laborum dolore deserunt pariatur. Velit quis et deserunt velit excepteur sunt non. Exercitation eiusmod enim laboris amet. Consequat dolor laborum officia dolor minim exercitation est laborum.",
         textAlign: TextAlign.justify,
