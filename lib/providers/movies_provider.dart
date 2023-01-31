@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:peliculas/models/models.dart';
+import 'package:peliculas/models/search_movies_response.dart';
 
 class MoviesProvider extends ChangeNotifier {
 // https://api.themoviedb.org/3/movie/now_playing?api_key=23f92fc8dc25d2d89f21df2e38e3091f&language=en-US&page=1
@@ -26,7 +27,7 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   Future<String> _getJsonData(String endpoint, [int page = 1]) async {
-    var url = Uri.https(_baseUrl, endpoint,
+    final url = Uri.https(_baseUrl, endpoint,
         {'api_key': _apiKey, 'language': _language, 'page': '$page'});
     final response = await http.get(url);
 
@@ -73,5 +74,14 @@ class MoviesProvider extends ChangeNotifier {
     moviesCast[movieID] = creditsReponse.cast;
 
     return creditsReponse.cast;
+  }
+
+  Future<List<Movie>> searchMovies(String query) async {
+    final url = Uri.https(_baseUrl, '3/search/movie',
+        {'api_key': _apiKey, 'language': _language, 'query': query});
+    final response = await http.get(url);
+    final searchReponse = SearchResponse.fromJson(jsonDecode(response.body));
+
+    return searchReponse.results;
   }
 }
