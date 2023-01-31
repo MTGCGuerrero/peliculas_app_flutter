@@ -1,23 +1,50 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:peliculas/providers/movies_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../models/models.dart';
 
 class CastingCards extends StatelessWidget {
   final int movieId;
 
   const CastingCards({super.key, required this.movieId});
 
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 30),
-      width: double.infinity,
-      height: 180,
-      child: ListView.builder(
-        itemCount: 10,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (_, int index) => _CastCard(),
-      ),
-    );
+    final moviesProvider = Provider.of<MoviesProvider>(context);
+    return FutureBuilder(
+        future: moviesProvider.getMovieCast(movieId),
+        builder: (_, AsyncSnapshot<List<Cast>> snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              constraints: const BoxConstraints(maxWidth: 150),
+              height: 180,
+              child: const CupertinoActivityIndicator(),
+            );
+          }
+          final cast = snapshot.data!;
+          return Container(
+            margin: const EdgeInsets.only(bottom: 30),
+            width: double.infinity,
+            height: 180,
+            child: ListView.builder(
+              itemCount: 10,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, int index) => _CastCard(),
+            ),
+          );
+        });
+
+    // return Container(
+    //   margin: const EdgeInsets.only(bottom: 30),
+    //   width: double.infinity,
+    //   height: 180,
+    //   child: ListView.builder(
+    //     itemCount: 10,
+    //     scrollDirection: Axis.horizontal,
+    //     itemBuilder: (_, int index) => _CastCard(),
+    //   ),
+    // );
   }
 }
 
