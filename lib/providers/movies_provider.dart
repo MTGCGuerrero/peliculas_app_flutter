@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:peliculas/helpers/debouncer.dart';
 import 'package:peliculas/models/models.dart';
 import 'package:peliculas/models/search_movies_response.dart';
 
@@ -18,6 +20,16 @@ class MoviesProvider extends ChangeNotifier {
   Map<int, List<Cast>> moviesCast = {};
   int _popularPage = 0;
 
+
+  final debouncer = Debouncer(duration: const Duration(milliseconds: 500),
+  onValue: (value) => null);
+
+
+
+  final StreamController<List<Movie>> _suggestionStreamController =
+      StreamController.broadcast();
+  Stream<List<Movie>> get suggestionStream =>
+      _suggestionStreamController.stream;
   // ignore: non_constant_identifier_names
   MoviesProvider() {
     // ignore: avoid_print
@@ -83,5 +95,21 @@ class MoviesProvider extends ChangeNotifier {
     final searchReponse = SearchResponse.fromJson(jsonDecode(response.body));
 
     return searchReponse.results;
+  }
+
+
+  void getSuggestionsByQuery(String searchTerm){
+    debouncer.value = '';
+    debouncer.onValue = (value) async {
+     
+      final results = await searchMovies(searchTerm);
+      _suggestionStreamController.add(results);
+    };
+
+    final timer = Timer.periodic(Duration(milliseconds: 300), (_) {
+      debouncer.value = searchTerm;
+    });
+
+    Future.delayed(const Duration(milliseconds: 301)).then((_) => timer.cancel());
   }
 }
