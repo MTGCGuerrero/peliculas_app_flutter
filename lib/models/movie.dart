@@ -32,12 +32,12 @@ class Movie {
   bool video;
   double voteAverage;
   int voteCount;
-
+  String? heroId;
   get fullPosterImg {
     if (posterPath != null) {
       return "https://image.tmdb.org/t/p/w500$posterPath ";
     }
-    
+
     return "https://i.stack.imgur.com/GNhxO.png";
   }
 
@@ -48,6 +48,7 @@ class Movie {
 
     return "https://i.stack.imgur.com/GNhxO.png";
   }
+
   factory Movie.fromRawJson(String str) => Movie.fromJson(json.decode(str));
 
   // String toRawJson() => json.encode(toJson());
